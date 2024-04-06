@@ -1,0 +1,32 @@
+本实验在 `Linux` 操作系统， `Python 3.10.5` 版本环境下实现，使用到的包有 `os, json, tqdm, math, sys`
+将语料库和汉字拼音表，以及标准答案输出按如下形式放置在data文件夹下
+
+.
+├── data
+│   ├── input.txt
+│   ├── output.txt
+│   ├── std_output.txt
+│   ├── 语料库
+│   │   ├── SMP2020
+│   │   │   └── ...
+│   │   └── sina_news_gbk
+│   │       └── ...
+│   └── 拼音汉字表
+│       ├── README.txt
+│       ├── 拼音汉字表.txt
+│       └── 一二级汉字表.txt
+├── readme
+└── src
+    ├── compare.py
+    ├── pinyin.py
+    ├── pinyin3.py
+    ├── process.py
+    └── simplify.py
+
+放置后，运行 `python src/process.py` 即可生成数据 `1_word.txt` `2_word.txt` `3_word.txt`
+然后运行 `python src/pinyin.py < data/input.txt > data/output.txt` 即可生成拼音结果 `./data/output.txt`
+运行 `python src/compare.py` 可以获得正确率
+
+若要运行三元模型，可以直接运行 `python src/pinyin3.py --full < data/input.txt > data/output.txt` 即可生成拼音结果
+如果用全部三元数据会运行较慢，故可以运行 `python src/simplify.py` 获得 `3_simple_word.txt` ，然后再运行 `python src/pinyin3.py < data/input.txt > data/output.txt` 即可生成拼音结果
+同样可运行 `python src/compare.py` 获得正确率
