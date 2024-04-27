@@ -5,7 +5,7 @@
 
 ## 实验环境
 
-本实验在 `Python 3.10.5` 版本环境下实现，使用到的包有 `os, json, tqdm, math, sys`
+本实验在 `Linux` 操作系统， `Python 3.10.5` 版本环境下实现，使用到的包有 `os, json, tqdm, math, sys`
 
 ## 语料库及预处理方法
 
