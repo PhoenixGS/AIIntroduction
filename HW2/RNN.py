@@ -27,7 +27,7 @@ class CNN(torch.nn.Module):
         return x
 
 class RNN(torch.nn.Module):
-    def __init__(self, embed_dim=50, hidden_dim=100, num_layers=1, num_classes=2, dropout=0.5):
+    def __init__(self, embed_dim=50, hidden_dim=100, num_layers=2, num_classes=2, dropout=0.5):
         super(RNN, self).__init__()
         self.lstm = torch.nn.LSTM(embed_dim, hidden_dim, num_layers, batch_first=True, dropout=dropout)
         self.fc = torch.nn.Linear(hidden_dim, num_classes)
