@@ -85,3 +85,17 @@ class RNN2(torch.nn.Module):
         x = self.fc(x)
         return x
 
+class Transformer(torch.nn.Module):
+    def __init__(self, embed_dim=50, hidden_dim=100, num_layers=2, num_classes=2, dropout=0.5):
+        super(Transformer, self).__init__()
+        self.encoder_layer = torch.nn.TransformerEncoderLayer(d_model=embed_dim, nhead=10, dropout=dropout)
+        self.transformer_encoder = torch.nn.TransformerEncoder(self.encoder_layer, num_layers=num_layers)
+        self.fc = torch.nn.Linear(embed_dim, num_classes)
+
+    def forward(self, x):
+        x = x.permute(1, 0, 2)
+        x = self.transformer_encoder(x)
+        x = x.permute(1, 0, 2)
+        x = x[:, -1, :]
+        x = self.fc(x)
+        return x
