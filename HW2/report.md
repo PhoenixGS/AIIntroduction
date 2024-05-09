@@ -2,7 +2,7 @@
 
 ## 模型结构图
 
-共实现了以下模型：CNN
+共实现了以下模型：两个MLP模型，一个CNN模型，两个RNN模型和一个Transformer模型。
 
 ### MLP结构图
 
@@ -51,6 +51,14 @@ Max pool层即用于对每一类特征，提取一个句子中所有token中最�
 
 为一个双层双向LSTM，每一层的输出通过一个dropout层，最后将双向LSTM的输出拼接，再通过一个全连接层，取 $\text{argmax}$ 便可得到结果。
 
+### Transformer结构图
+
+Transformer模型的结构图如下：
+
+![](https://p.ipic.vip/8idrbj.jpeg)
+
+由于为一个分类任务，所以只使用了Transformer的Encoder部分，即将所有token转化为词向量后，通过两层的Transformer Encoder，再通过一个全连接层，取 $\text{argmax}$ 便可得到结果。
+
 ## 流程分析
 
 在主程序 `main.py` 中，首先调用 `load_text` 函数，该函数会从训练集、验证集、测试集中读取文本与标签，并使用预训练好的 `Word2Vec` 将单个文本token转化为向量（为了加速只取前50个token，不足的使用 $0$ 向量补足，如果token不在 `Word2Vec` 中则直接丢弃），得到 `{train, val, test}_{inputs, labels}` 六个Tensor。
@@ -61,6 +69,22 @@ Max pool层即用于对每一类特征，提取一个句子中所有token中最�
 
 训练结束后，调用 `evaluate` 函数使用模型在测试集上进行评估，给出模型输出的 `accuracy, precision, recall, f1` 等评价指标。 
 
+## 实验结果
+
+以下为对于每个模型选择参数 $后较优的结果：
+
+MLP
+Accuracy: 0.7073, Precision: 0.8264, Recall: 0.5348, F1: 0.6494
+MLP2
+Accuracy: 0.7832, Precision: 0.8092, Recall: 0.7487, F1: 0.7778
+CNN
+Accuracy: 0.7669, Precision: 0.8301, Recall: 0.6791, F1: 0.7471
+RNN
+Accuracy: 0.7642, Precision: 0.8247, Recall: 0.6791, F1: 0.7449
+RNN2
+Accuracy: 0.7859, Precision: 0.8253, Recall: 0.7326, F1: 0.7762
+Transformer
+Accuracy: 0.7615, Precision: 0.8000, Recall: 0.7059, F1: 0.7500
 
 ## 参数效果比较及分析
 
@@ -125,6 +149,8 @@ Max pool层即用于对每一类特征，提取一个句子中所有token中最�
 
 ## Baseline效果差异
 
+以MLP为基线模型，
+
 ## 问题思考
 
 1. 实验训练什么时候停止是最合适的？简要陈述你的实现方式，并试分析固定迭代次数与通过验证集调整等方法的优缺点。
@@ -161,4 +187,4 @@ Max pool层即用于对每一类特征，提取一个句子中所有token中最�
 
 ## 心得体会
 
-
+在本次实验中，我使用PyTorch框架实现了多类模型，包括MLP，CNN，RNN，Transformer等，并进行训练与评估。通过调整超参数，发现不同的超参数对于模型的训练效果有着不同的影响。通过本次实验，我对于深度学习模型的训绨有了更深的理解，对于超参数的选择也有了更深的认识。
