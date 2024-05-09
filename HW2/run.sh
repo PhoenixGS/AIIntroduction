@@ -1,0 +1,16 @@
+python main.py --model RNN --batch_size=512 --epochs=500 --lr=0.01 > output1
+python main.py --model RNN --batch_size=512 --epochs=500 --lr=0.001 > output2
+python main.py --model RNN --batch_size=512 --epochs=500 --lr=0.0001 > output3
+python main.py --model RNN --batch_size=512 --epochs=500 --lr=0.00001 > output4
+python main.py --model RNN --batch_size=256 --epochs=500 --lr=0.0001 > output5
+python main.py --model RNN --batch_size=128 --epochs=500 --lr=0.0001 > output6
+python main.py --model RNN --batch_size=64 --epochs=500 --lr=0.0001 > output7
+python main.py --model RNN --batch_size=32 --epochs=500 --lr=0.0001 > output8
+python main.py --model RNN --batch_size=16 --epochs=500 --lr=0.0001 > output9
+python main.py --model RNN --batch_size=1024 --epochs=500 --lr=0.0001 > output10
+python main.py --model RNN --batch_size=2048 --epochs=500 --lr=0.0001 > output11
+python main.py --model RNN --batch_size=512 --epochs=10 --lr=0.0001 > output12
+python main.py --model RNN --batch_size=512 --epochs=50 --lr=0.0001 > output13
+python main.py --model RNN --batch_size=512 --epochs=100 --lr=0.0001 > output14
+python main.py --model RNN --batch_size=512 --epochs=200 --lr=0.0001 > output15
+python main.py --model RNN --batch_size=512 --epochs=1000 --lr=0.0001 > output16
