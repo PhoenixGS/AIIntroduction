@@ -72,7 +72,7 @@ Transformer模型的结构图如下：
 ## 实验结果
 
 以下为对于每个模型选择参数 $batch\_size=512,epochs=500,lr=0.0001,dropout=0.5$ 
-后较优的结果：
+后较优的结果（注：以下Metric以负面情绪为Positive）：
 
 ```
 MLP

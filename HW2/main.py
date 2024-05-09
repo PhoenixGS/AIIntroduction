@@ -25,7 +25,6 @@ def load_text(path):
             sentence = line[1:]
             sentence = [word2vec[word] for word in sentence if word in word2vec]
             if len(sentence) < max_len:
-                # sentence += [np.zeros(50) for _ in range(max_len - len(sentence))]
                 sentence = [np.zeros(50) for _ in range(max_len - len(sentence))] + sentence # prevent RNN from forgetting
             else:
                 sentence = sentence[:max_len]
@@ -33,16 +32,17 @@ def load_text(path):
             labels.append(label)
     inputs = np.array(inputs)
     labels = np.array(labels)
-    return torch.tensor(inputs, dtype=torch.float32), torch.tensor(labels, dtype=torch.long)
+    return torch.tensor(inputs, dtype=torch.float32), torch.tensor(labels, dtype=torch.long) # return inputs and labels as tensor
 
+# train model
 def train(model, train_inputs, train_labels, val_inputs, val_labels, epochs, batch_size, lr):
-    optimizer = torch.optim.Adam(model.parameters(), lr=lr)
+    optimizer = torch.optim.Adam(model.parameters(), lr=lr) # set optimizer and loss function
     loss_fn = torch.nn.CrossEntropyLoss()
     for epoch in range(epochs):
         model.train()
         loss_sum = 0
         accuracy_sum = 0
-        for i in range(0, len(train_inputs), batch_size):
+        for i in range(0, len(train_inputs), batch_size): # train model on training set
             optimizer.zero_grad()
             inputs = train_inputs[i:i+batch_size]
             labels = train_labels[i:i+batch_size]
@@ -59,9 +59,9 @@ def train(model, train_inputs, train_labels, val_inputs, val_labels, epochs, bat
             optimizer.step()
         loss_avg = loss_sum / len(train_inputs)
         accuracy_avg = accuracy_sum / len(train_inputs)
-        print('tEpoch: %d, Loss: %.4f, Accuracy: %.4f' % (epoch, loss_avg, accuracy_avg))
+        print('tEpoch: %d, Loss: %.4f, Accuracy: %.4f' % (epoch, loss_avg, accuracy_avg)) # print training loss and accuracy
         model.eval()
-        with torch.no_grad():
+        with torch.no_grad(): # evaluate model on validation set
             loss_sum = 0
             accuracy_sum = 0
             for i in range(0, len(val_inputs), batch_size):
@@ -78,8 +78,9 @@ def train(model, train_inputs, train_labels, val_inputs, val_labels, epochs, bat
 
             loss_avg = loss_sum / len(val_inputs)
             accuracy_avg = accuracy_sum / len(val_inputs)
-            print('Epoch: %d, Loss: %.4f, Accuracy: %.4f' % (epoch, loss_avg, accuracy_avg))
+            print('Epoch: %d, Loss: %.4f, Accuracy: %.4f' % (epoch, loss_avg, accuracy_avg)) # print validation loss and accuracy
 
+# evaluate model on test set
 def evaluate(model, test_inputs, test_labels, batch_size):
     loss_fn = torch.nn.CrossEntropyLoss()
     model.eval()
@@ -103,13 +104,14 @@ def evaluate(model, test_inputs, test_labels, batch_size):
             FP += torch.sum((labels == 1) & (test_labels_batch == 0)).item()
             FN += torch.sum((labels == 0) & (test_labels_batch == 1)).item()
         
-        print('TP: %d, TN: %d, FP: %d, FN: %d' % (TP, TN, FP, FN))
+        print('TP: %d, TN: %d, FP: %d, FN: %d' % (TP, TN, FP, FN)) # print confusion matrix
         accuracy = (TP + TN) / (TP + TN + FP + FN)
         precision = TP / (TP + FP)
         recall = TP / (TP + FN)
         f1 = 2 * precision * recall / (precision + recall)
-        print('Accuracy: %.4f, Precision: %.4f, Recall: %.4f, F1: %.4f' % (accuracy, precision, recall, f1))
+        print('Accuracy: %.4f, Precision: %.4f, Recall: %.4f, F1: %.4f' % (accuracy, precision, recall, f1)) # print accuracy, precision, recall and F1 score
 
+# get arguments
 def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', type=str, default='RNN')
@@ -141,6 +143,9 @@ if __name__ == '__main__':
         model = MLP2(dropout=args.dropout).to(device)
     elif args.model == 'Transformer':
         model = Transformer().to(device)
+
+    if model is None:
+        sys.exit('Invalid model')
 
     train(model, train_inputs, train_labels, val_inputs, val_labels, epochs=args.epochs, batch_size=args.batch_size, lr=args.lr)
     evaluate(model, test_inputs, test_labels, batch_size=args.batch_size)
