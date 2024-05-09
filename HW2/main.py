@@ -25,7 +25,8 @@ def load_text(path):
             sentence = line[1:]
             sentence = [word2vec[word] for word in sentence if word in word2vec]
             if len(sentence) < max_len:
-                sentence += [np.zeros(50) for _ in range(max_len - len(sentence))]
+                # sentence += [np.zeros(50) for _ in range(max_len - len(sentence))]
+                sentence = [np.zeros(50) for _ in range(max_len - len(sentence))] + sentence # prevent RNN from forgetting
             else:
                 sentence = sentence[:max_len]
             inputs.append(sentence)
@@ -53,12 +54,12 @@ def train(model, train_inputs, train_labels, val_inputs, val_labels, epochs, bat
             accuracy = torch.sum(torch.argmax(outputs, dim=1) == labels).item() / len(labels)
             loss_sum += loss.item() * len(labels)
             accuracy_sum += accuracy * len(labels)
-            # print("Loss: %.4f" % loss)
+
             loss.backward()
             optimizer.step()
         loss_avg = loss_sum / len(train_inputs)
         accuracy_avg = accuracy_sum / len(train_inputs)
-        print('Epoch: %d, Loss: %.4f, Accuracy: %.4f' % (epoch, loss_avg, accuracy_avg))
+        print('tEpoch: %d, Loss: %.4f, Accuracy: %.4f' % (epoch, loss_avg, accuracy_avg))
         model.eval()
         with torch.no_grad():
             loss_sum = 0
@@ -115,6 +116,7 @@ def get_args():
     parser.add_argument('--epochs', type=int, default=50,)
     parser.add_argument('--batch_size', type=int, default=512)
     parser.add_argument('--lr', type=float, default=0.001)
+    parser.add_argument('--dropout', type=float, default=0.5)
     return parser.parse_args()
 
 if __name__ == '__main__':
@@ -128,15 +130,17 @@ if __name__ == '__main__':
 
     model = None
     if args.model == 'RNN':
-        model = RNN().to(device)
+        model = RNN(dropout=args.dropout).to(device)
     elif args.model == 'RNN2':
-        model = RNN2().to(device)
+        model = RNN2(dropout=args.dropout).to(device)
     elif args.model == 'CNN':
-        model = CNN().to(device)
+        model = CNN(dropout=args.dropout).to(device)
     elif args.model == 'MLP':
-        model = MLP().to(device)
+        model = MLP(dropout=args.dropout).to(device)
     elif args.model == 'MLP2':
-        model = MLP2().to(device)
+        model = MLP2(dropout=args.dropout).to(device)
+    elif args.model == 'Transformer':
+        model = Transformer().to(device)
 
     train(model, train_inputs, train_labels, val_inputs, val_labels, epochs=args.epochs, batch_size=args.batch_size, lr=args.lr)
     evaluate(model, test_inputs, test_labels, batch_size=args.batch_size)
