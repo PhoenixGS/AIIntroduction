@@ -1,5 +1,21 @@
 # README
 
+* 数据准备
+
+    将代码及数据集按如下形式放置：
+    
+    ```
+    .
+    ├── Dataset
+    │   ├── test.txt
+    │   ├── train.txt
+    │   ├── validation.txt
+    │   └── wiki_word2vec_50.bin
+    ├── README.md
+    ├── main.py
+    └── models.py
+    ```
+
 * 依赖库：
 
     `torch, gensim, numpy, argparse`
